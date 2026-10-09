@@ -41,6 +41,30 @@ html,body{width:100%;height:100%;min-height:0;overflow:hidden}
  .score-label{font-size:clamp(9px,2.6vw,12px)}
  .score-number{font-size:clamp(22px,6vw,30px)}
 }
+
+/* Memory Match: same teal, gold and deep-slate theme as XOX. */
+.memory-game{width:min(100%,680px);gap:0}
+.memory-topbar{grid-template-columns:1fr 1fr clamp(48px,8vw,68px);margin-bottom:clamp(8px,1.4vh,14px)}
+.memory-title-mark{font-size:clamp(22px,4.1vw,36px);letter-spacing:-.05em;line-height:.95}
+.memory-meta{display:flex;justify-content:space-between;align-items:center;gap:8px;color:var(--pale);font-size:clamp(11px,1.8vh,14px);margin-bottom:clamp(8px,1.3vh,12px);font-weight:800}
+.memory-difficulty{display:flex;align-items:center;gap:6px}
+.memory-difficulty select{background:var(--tile);color:var(--white);border:1px solid #42616c;border-radius:8px;padding:5px 7px;font:inherit}
+.memory-board{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:clamp(5px,1.3vw,10px);width:min(100%,min(49vh,460px));margin:0 auto clamp(12px,2vh,18px);flex-shrink:1}
+.memory-card{aspect-ratio:1;min-width:0;border-radius:clamp(7px,1.5vh,13px);background:var(--tile);box-shadow:0 clamp(3px,.7vh,6px) 0 var(--tile-shadow);display:grid;place-items:center;color:var(--white);font-size:clamp(20px,5.1vh,43px);line-height:1;user-select:none;transition:transform .12s,background .12s;overflow:hidden}
+.memory-card:not(:disabled):hover{background:#294650;transform:translateY(-1px)}
+.memory-card .card-back{font-size:clamp(24px,5.4vh,42px);font-weight:900;color:var(--teal)}
+.memory-card.revealed{background:#294650;box-shadow:0 0 0 2px var(--teal),0 4px 0 var(--tile-shadow)}
+.memory-card.matched{background:var(--teal);box-shadow:0 4px 0 #168e8b;color:var(--ink);cursor:default}
+.memory-card.bonus-card.matched{background:var(--gold);box-shadow:0 4px 0 #b98217}
+.memory-scoreboard{gap:clamp(6px,1.5vw,12px)}
+.memory-scoreboard .score{height:clamp(48px,8.2vh,68px);border-radius:12px}
+.memory-scoreboard .score-label{font-size:clamp(9px,1.5vh,12px)}
+.memory-scoreboard .score-number{font-size:clamp(21px,3.2vh,30px)}
+.memory-game .result{margin:clamp(5px,1vh,9px) 0 0;min-height:1.1em}
+.memory-game .bottom-actions{margin-top:clamp(5px,1vh,9px)}
+@media(max-width:480px){.memory-game{padding:0 12px}.memory-board{width:min(100%,47vh,410px);gap:6px}.memory-card{font-size:clamp(20px,6vw,34px);border-radius:8px}.memory-title-mark{font-size:clamp(18px,5vw,26px)}.memory-topbar{gap:8px}.memory-scoreboard .score{height:54px}}
+@media(max-height:650px){.memory-board{width:min(100%,39vh,300px);gap:5px;margin-bottom:7px}.memory-card{font-size:clamp(18px,4.2vh,30px)}.memory-meta{margin-bottom:5px}.memory-scoreboard .score{height:42px}.memory-game .result{margin-top:3px}.memory-game .bottom-actions{margin-top:3px}}
+
 @media(max-height:650px){
  .screen{padding-top:8px;padding-bottom:8px}
  .topbar{margin-bottom:8px}
@@ -68,6 +92,11 @@ html,body{width:100%;height:100%;min-height:0;overflow:hidden}
     <span><strong>XOX Game</strong><small>Classic Tic-Tac-Toe · Choose your opponent</small></span>
     <span class="arrow" aria-hidden="true">›</span>
    </button>
+   <button class="game-option" id="open-memory">
+    <span class="mini" aria-hidden="true">🧠</span>
+    <span><strong>Memory Match</strong><small>Flip emoji cards · Play with a friend or AI</small></span>
+    <span class="arrow" aria-hidden="true">›</span>
+   </button>
   </div>
   <p class="hint">MORE GAMES COMING SOON</p>
  </div>
@@ -84,6 +113,38 @@ html,body{width:100%;height:100%;min-height:0;overflow:hidden}
    </div>
    <div class="bottom-actions"><button class="soft-btn" id="back-menu">← Game menu</button></div>
   </div>
+ </div>
+</section>
+<section class="screen" id="memory-mode-screen" aria-label="Choose Memory Match opponent">
+ <div class="menu-wrap">
+  <h1 class="logo">🧠 <span style="color:var(--teal)">MEMORY</span> <span style="color:var(--gold)">MATCH</span></h1>
+  <p class="sub">Remember the emojis. Find every pair.</p>
+  <div class="menu-panel">
+   <h2 class="menu-title">CHOOSE YOUR OPPONENT</h2>
+   <div class="mode-actions">
+    <button class="mode-btn" id="memory-friend"><span class="mode-icon">👥</span><strong>Play with Friend</strong><small>Take turns on the same device</small></button>
+    <button class="mode-btn" id="memory-cpu"><span class="mode-icon">🤖</span><strong>Play with AI</strong><small>Easy · Medium · Hard memory</small></button>
+   </div>
+   <div class="bottom-actions"><button class="soft-btn" id="memory-back-menu">← Game menu</button></div>
+  </div>
+ </div>
+</section>
+<section class="screen game-screen" id="memory-screen" aria-label="Memory Match game">
+ <div class="game memory-game">
+  <header class="topbar memory-topbar">
+   <div class="mark memory-title-mark"><span style="color:var(--teal)">MEMORY</span><br><span style="color:var(--gold)">MATCH</span></div>
+   <div class="turn" id="memory-turn"><span class="turn-mark">🧠</span><span>YOU</span></div>
+   <button class="restart" id="memory-restart" aria-label="Restart game" title="Restart game">⟳</button>
+  </header>
+  <div class="memory-meta"><span id="memory-progress">Pairs found: 0 / 12</span><label id="memory-difficulty-wrap" class="memory-difficulty">AI <select id="memory-difficulty" aria-label="AI difficulty"><option value="easy">Easy</option><option value="medium" selected>Medium</option><option value="hard">Hard</option></select></label></div>
+  <div class="memory-board" id="memory-board" role="group" aria-label="Memory Match cards"></div>
+  <section class="scoreboard memory-scoreboard" aria-label="Memory Match score">
+   <div class="score x"><span class="score-label" id="memory-x-label">YOU · PAIRS</span><strong class="score-number" id="memory-x-score">0</strong></div>
+   <div class="score ties"><span class="score-label">BONUS ⭐</span><strong class="score-number" id="memory-bonus-score">0</strong></div>
+   <div class="score o"><span class="score-label" id="memory-o-label">AI · PAIRS</span><strong class="score-number" id="memory-o-score">0</strong></div>
+  </section>
+  <p class="result" id="memory-result" aria-live="polite"></p>
+  <div class="bottom-actions"><button class="soft-btn" id="memory-menu-btn">← Game menu</button><button class="soft-btn" id="memory-new-round">New round</button></div>
  </div>
 </section>
 <section class="screen game-screen" id="xox-screen" aria-label="XOX game">
@@ -128,6 +189,31 @@ document.getElementById('restart').addEventListener('click',newRound);
 document.getElementById('new-round').addEventListener('click',newRound);
 document.getElementById('menu-btn').addEventListener('click',()=>{clearTimeout(cpuTimer);cpuTimer=null;showScreen('mode');});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&gameScreen.classList.contains('active'))showScreen('menu');});
+
+/* Memory Match: 12 emoji pairs plus one golden bonus card make a 5×5 board. */
+const memoryModeScreen=document.getElementById('memory-mode-screen'), memoryScreen=document.getElementById('memory-screen');
+const memoryBoard=document.getElementById('memory-board'), memoryResult=document.getElementById('memory-result');
+const emojiPool=['😂','😁','🥵','😍','😘','😒','😉','🫡','😏','🤤','😴','🤑','😭','😤','🥴','🫩','🫠','😱','🥶','🤯','🤬','😇','🥳','🤩','😎','🤗','🥹','😈','🤠','👻','💀','👽','🤖','🐸','🦊','🐼','🐵','🦄','🐙','🦋','🐝','🌈','🔥','⭐','🍕','🍉','🍓','🍩','🎮','⚽','🚀','💎','🎯','🎲','🎧','💖','💯','🌻','🍀','☀️','🌙','⚡','🎉','🧸','🍄'];
+let memoryMode='cpu', memoryCards=[], memoryOpen=[], memoryLocked=false, memoryCurrent='X', memoryScores={X:0,O:0,B:0}, memoryMatched=0, memoryBonusUsed=false, memoryCpuTimer=null, memoryKnown=new Map(), memorySeen=new Set(), memoryRound=0;
+function showMemoryScreen(which){menu.classList.toggle('active',which==='menu');modeScreen.classList.toggle('active',which==='xoxmode');gameScreen.classList.toggle('active',which==='xoxgame');memoryModeScreen.classList.toggle('active',which==='memorymode');memoryScreen.classList.toggle('active',which==='memorygame');}
+function shuffleMemory(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function setupMemory(){clearTimeout(memoryCpuTimer);memoryCpuTimer=null;memoryRound++;memoryCards=[];memoryOpen=[];memoryLocked=false;memoryCurrent='X';memoryScores={X:0,O:0,B:0};memoryMatched=0;memoryBonusUsed=false;memoryKnown=new Map();memorySeen=new Set();const picks=shuffleMemory([...emojiPool]).slice(0,12);picks.forEach((emoji,pair)=>{memoryCards.push({id:memoryCards.length,emoji,pair,matched:false});memoryCards.push({id:memoryCards.length,emoji,pair,matched:false});});memoryCards.push({id:24,emoji:'⭐',pair:-1,bonus:true,matched:false});shuffleMemory(memoryCards);memoryCards.forEach((c,i)=>c.id=i;);document.getElementById('memory-x-score').textContent='0';document.getElementById('memory-o-score').textContent='0';document.getElementById('memory-bonus-score').textContent='0';memoryResult.textContent='Find pairs. The golden ⭐ card gives a bonus point!';updateMemoryHud();renderMemoryBoard();}
+function renderMemoryBoard(){memoryBoard.innerHTML='';memoryCards.forEach((card,i)=>{const b=document.createElement('button');b.type='button';b.className='memory-card'+(card.matched?' matched':'')+(card.bonus?' bonus-card':'')+(memoryOpen.includes(i)?' revealed':'');b.disabled=card.matched||memoryLocked||(memoryMode==='cpu'&&memoryCurrent==='O');b.setAttribute('aria-label',card.matched||memoryOpen.includes(i)?'Card '+(i+1)+': '+card.emoji:'Hidden card '+(i+1));if(card.matched||memoryOpen.includes(i)){b.textContent=card.emoji;}else{const back=document.createElement('span');back.className='card-back';back.textContent='?';b.appendChild(back);}b.addEventListener('click',()=>flipMemory(i));memoryBoard.appendChild(b);});}
+function updateMemoryHud(){const turn=document.getElementById('memory-turn');turn.innerHTML=memoryCurrent==='X'?'<span class="turn-mark">🧠</span><span>'+(memoryMode==='friend'?'PLAYER 1':'YOU')+'</span>':'<span class="turn-mark" style="color:var(--gold)">🤖</span><span>'+(memoryMode==='friend'?'PLAYER 2':'AI')+'</span>';document.getElementById('memory-x-label').textContent=memoryMode==='friend'?'PLAYER 1 · PAIRS':'YOU · PAIRS';document.getElementById('memory-o-label').textContent=memoryMode==='friend'?'PLAYER 2 · PAIRS':'AI · PAIRS';document.getElementById('memory-x-score').textContent=memoryScores.X;document.getElementById('memory-o-score').textContent=memoryScores.O;document.getElementById('memory-bonus-score').textContent=memoryScores.B;document.getElementById('memory-progress').textContent='Pairs found: '+memoryMatched+' / 12';document.getElementById('memory-difficulty-wrap').style.visibility=memoryMode==='cpu'?'visible':'hidden';}
+function flipMemory(i){if(memoryLocked||memoryCards[i].matched||memoryOpen.includes(i)||(memoryMode==='cpu'&&memoryCurrent==='O'))return;memoryOpen.push(i);if(memoryMode==='cpu')rememberMemory(i);renderMemoryBoard();if(memoryCards[i].bonus){memoryLocked=true;memoryScores[memoryCurrent==='X'?'X':'O']++;memoryScores.B++;memoryCards[i].matched=true;memoryOpen=[];setTimeout(()=>{memoryLocked=false;updateMemoryHud();if(memoryMatched===12)finishMemory();else advanceMemoryTurn(true);},450);return;}if(memoryOpen.length===2){memoryLocked=true;const [a,b]=memoryOpen;if(memoryCards[a].pair===memoryCards[b].pair){memoryCards[a].matched=memoryCards[b].matched=true;memoryMatched++;memoryScores[memoryCurrent]++;memoryOpen=[];setTimeout(()=>{memoryLocked=false;updateMemoryHud();if(memoryMatched===12)finishMemory();else{renderMemoryBoard();if(memoryMode==='cpu'&&memoryCurrent==='O')memoryCpuTimer=setTimeout(cpuMemoryTurn,450);}},520);}else{setTimeout(()=>{memoryOpen=[];memoryLocked=false;memoryCurrent=memoryCurrent==='X'?'O':'X';updateMemoryHud();renderMemoryBoard();if(memoryMode==='cpu'&&memoryCurrent==='O')memoryCpuTimer=setTimeout(cpuMemoryTurn,450);},850);}}}
+function rememberMemory(i){const c=memoryCards[i];if(!c.bonus){if(!memoryKnown.has(c.pair))memoryKnown.set(c.pair,new Set());memoryKnown.get(c.pair).add(i);memorySeen.add(i);}}
+function advanceMemoryTurn(keepTurn){if(!keepTurn)memoryCurrent=memoryCurrent==='X'?'O':'X';updateMemoryHud();renderMemoryBoard();if(memoryMode==='cpu'&&memoryCurrent==='O')memoryCpuTimer=setTimeout(cpuMemoryTurn,500);}
+function cpuMemoryTurn(){memoryCpuTimer=null;if(memoryLocked||memoryCurrent!=='O'||memoryMatched===12)return;const difficulty=document.getElementById('memory-difficulty').value;let choice=-1;const unmatched=memoryCards.map((c,i)=>({c,i})).filter(x=>!x.c.matched&&!x.c.bonus&&!memoryOpen.includes(x.i));const knownPairs=[];for(const [pair,ids] of memoryKnown.entries()){const remain=[...ids].filter(i=>!memoryCards[i].matched);if(remain.length>=2)knownPairs.push(remain.slice(0,2));}if(knownPairs.length&&(difficulty==='hard'||Math.random()<(difficulty==='medium'?.72:.35))){choice=knownPairs[0][0];}else{const candidates=unmatched.filter(x=>!memorySeen.has(x.i));choice=(candidates.length?candidates:unmatched)[Math.floor(Math.random()*(candidates.length?candidates:unmatched).length)]?.i??-1;}if(choice<0){finishMemory();return;}memoryOpen=[choice];rememberMemory(choice);renderMemoryBoard();setTimeout(()=>{if(memoryCards[choice].bonus){memoryCards[choice].matched=true;memoryScores.O++;memoryScores.B++;memoryOpen=[];updateMemoryHud();advanceMemoryTurn(true);return;}let match=-1;const pair=memoryCards[choice].pair;const remembered=memoryKnown.get(pair);if(remembered){match=[...remembered].find(i=>i!==choice&&!memoryCards[i].matched);}if(match===undefined||match===-1){const opts=memoryCards.map((c,i)=>({c,i})).filter(x=>x.i!==choice&&!x.c.matched&&!x.c.bonus&&x.c.pair===pair);if(opts.length)match=opts[0].i;}if(match!==-1&&match!==undefined&&(difficulty==='hard'||Math.random()<(difficulty==='medium'?.72:.35))){memoryOpen=[choice,match];rememberMemory(match);renderMemoryBoard();setTimeout(()=>{memoryCards[choice].matched=memoryCards[match].matched=true;memoryMatched++;memoryScores.O++;memoryOpen=[];memoryLocked=false;updateMemoryHud();if(memoryMatched===12)finishMemory();else{renderMemoryBoard();setTimeout(cpuMemoryTurn,420);}},500);}else{const secondOpts=memoryCards.map((c,i)=>({c,i})).filter(x=>x.i!==choice&&!x.c.matched&&!x.c.bonus);const second=secondOpts[Math.floor(Math.random()*secondOpts.length)];if(!second){memoryOpen=[];advanceMemoryTurn(false);return;}memoryOpen=[choice,second.i];rememberMemory(second.i);renderMemoryBoard();setTimeout(()=>{memoryOpen=[];memoryCurrent='X';updateMemoryHud();renderMemoryBoard();},800);}},500);}
+function finishMemory(){clearTimeout(memoryCpuTimer);memoryCpuTimer=null;memoryLocked=true;renderMemoryBoard();const x=memoryScores.X,o=memoryScores.O;if(x>o)memoryResult.textContent=memoryMode==='friend'?'Player 1 wins! 🎉':'You win! 🎉';else if(o>x)memoryResult.textContent=memoryMode==='friend'?'Player 2 wins! 🎉':'AI wins this round. Try again!';else memoryResult.textContent='It’s a tie! Great memory! 🤝';memoryResult.textContent+=' Final score: '+x+' – '+o+'.';}
+document.getElementById('open-memory').addEventListener('click',()=>showMemoryScreen('memorymode'));
+document.getElementById('memory-friend').addEventListener('click',()=>{memoryMode='friend';showMemoryScreen('memorygame');setupMemory();});
+document.getElementById('memory-cpu').addEventListener('click',()=>{memoryMode='cpu';showMemoryScreen('memorygame');setupMemory();});
+document.getElementById('memory-back-menu').addEventListener('click',()=>showMemoryScreen('menu'));
+document.getElementById('memory-restart').addEventListener('click',setupMemory);
+document.getElementById('memory-new-round').addEventListener('click',setupMemory);
+document.getElementById('memory-menu-btn').addEventListener('click',()=>{clearTimeout(memoryCpuTimer);memoryCpuTimer=null;showMemoryScreen('memorymode');});
+document.getElementById('memory-difficulty').addEventListener('change',()=>{memoryKnown=new Map();memorySeen=new Set();});
+
 updateTurn();updateScores();renderBoard();
 </script>
 </body>
