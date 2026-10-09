@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>2 Player Games — XOX</title>
+<style>
+:root{--bg:#192d35;--tile:#203943;--tile-shadow:#10242b;--teal:#30c2bd;--gold:#f6b735;--pale:#aec4ce;--ink:#192d35;--white:#edf5f7}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:var(--white);font-family:Inter,ui-rounded,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}button{font:inherit;cursor:pointer;border:0}button:focus-visible{outline:3px solid white;outline-offset:4px}.screen{min-height:100svh;display:none;padding:clamp(18px,5vw,48px);align-items:center;justify-content:center}.screen.active{display:flex}.menu-wrap{width:min(100%,680px);text-align:center}.logo{font-weight:950;letter-spacing:-.06em;font-size:clamp(42px,9vw,72px);margin:0 0 8px}.logo span:first-child{color:var(--teal)}.logo span:last-child{color:var(--gold)}.sub{color:#aec4ce;margin:0 0 38px;font-size:clamp(14px,3vw,18px)}.menu-panel{background:#203943;border-radius:28px;padding:clamp(22px,5vw,38px);box-shadow:0 10px 0 #10242b}.menu-title{font-size:22px;margin:0 0 20px}.game-option{width:100%;display:flex;align-items:center;gap:18px;text-align:left;padding:18px;margin:12px 0;border-radius:18px;background:#192f38;color:var(--white);box-shadow:0 5px 0 #10242b;transition:transform .15s,background .15s}.game-option:hover{transform:translateY(-2px);background:#294852}.game-option .mini{width:58px;height:58px;display:grid;place-items:center;border-radius:14px;background:#203943;font-size:36px;font-weight:900;color:var(--teal)}.game-option .mini span{color:var(--gold)}.game-option strong{display:block;font-size:19px}.game-option small{display:block;color:#aec4ce;margin-top:4px}.game-option .arrow{margin-left:auto;font-size:24px;color:var(--pale)}.hint{color:#8ea9b4;font-size:12px;margin:28px 0 0}.game-screen{align-items:flex-start;padding:clamp(16px,6.4vw,48px) 0 40px}.game{width:min(100%,656px);margin:0 auto;padding:0 clamp(18px,6.4vw,48px)}.topbar{display:grid;grid-template-columns:1fr 1fr 80px;gap:clamp(10px,3vw,22px);align-items:center;margin-bottom:clamp(60px,17vw,128px)}.mark{font-size:clamp(45px,9vw,76px);font-weight:950;letter-spacing:-.09em;line-height:1;white-space:nowrap}.mark .x{color:var(--teal)}.mark .o{color:var(--gold)}.turn{height:72px;border-radius:12px;background:#203943;box-shadow:0 5px 0 #10242b;display:flex;align-items:center;justify-content:center;gap:10px;color:var(--pale);font-size:clamp(15px,3.8vw,26px);font-weight:850;letter-spacing:.05em;white-space:nowrap}.turn .turn-mark{font-size:36px;color:var(--teal);line-height:1}.restart{height:72px;width:80px;border-radius:12px;background:var(--pale);color:var(--bg);box-shadow:0 7px 0 #7f9ca8;font-size:40px;font-weight:800}.restart:active{transform:translateY(3px);box-shadow:0 4px 0 #7f9ca8}.board{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(16px,5.4vw,40px);margin-bottom:clamp(34px,7.5vw,56px)}.cell{aspect-ratio:1;min-width:0;border-radius:clamp(14px,3vw,20px);background:var(--tile);box-shadow:0 14px 0 var(--tile-shadow);display:grid;place-items:center;color:var(--teal);font-size:clamp(58px,13vw,108px);font-weight:900;line-height:1;transition:transform .12s,background .12s}.cell:not(:disabled):hover{background:#294650;transform:translateY(-2px)}.cell.o{color:var(--gold)}.cell:disabled{cursor:default}.scoreboard{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(14px,5.4vw,40px)}.score{border-radius:clamp(14px,3vw,20px);height:clamp(104px,17vw,128px);display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--ink);gap:3px}.score.x{background:var(--teal)}.score.ties{background:var(--pale)}.score.o{background:var(--gold)}.score-label{font-size:clamp(12px,3.1vw,23px);letter-spacing:.02em}.score-number{font-size:clamp(29px,5.2vw,40px);font-weight:900;line-height:1.1}.bottom-actions{display:flex;justify-content:center;gap:12px;margin-top:32px}.soft-btn{padding:12px 18px;border-radius:12px;background:#203943;color:var(--pale);font-weight:700}.soft-btn:hover{background:#294650}.result{min-height:24px;text-align:center;color:var(--pale);margin:26px 0 0;font-weight:700}.hidden{display:none!important}@media(max-width:420px){.topbar{grid-template-columns:1fr 1.12fr 58px;gap:10px}.turn{height:60px;gap:6px}.turn .turn-mark{font-size:26px}.restart{height:60px;width:58px;font-size:32px}.board{gap:16px}.cell{box-shadow:0 10px 0 var(--tile-shadow)}.scoreboard{gap:12px}.score{height:100px}.score-label{font-size:12px}}@media(min-width:700px){.game-screen{align-items:center;padding-top:35px}.topbar{margin-bottom:60px}}
+</style>
+</head>
+<body>
+<main>
+<section class="screen active" id="menu" aria-label="Game menu">
+ <div class="menu-wrap">
+  <h1 class="logo"><span>2 PLAYER</span> <span>GAMES</span></h1>
+  <p class="sub">Quick games. Friendly competition.</p>
+  <div class="menu-panel">
+   <h2 class="menu-title">CHOOSE A GAME</h2>
+   <button class="game-option" id="open-xox">
+    <span class="mini">X<span>O</span></span>
+    <span><strong>XOX Game</strong><small>Classic Tic-Tac-Toe · You vs CPU</small></span>
+    <span class="arrow" aria-hidden="true">›</span>
+   </button>
+  </div>
+  <p class="hint">MORE GAMES COMING SOON</p>
+ </div>
+</section>
+<section class="screen game-screen" id="xox-screen" aria-label="XOX game">
+ <div class="game">
+  <header class="topbar">
+   <div class="mark" aria-label="X O"><span class="x">X</span><span class="o"> O</span></div>
+   <div class="turn" id="turn-display"><span class="turn-mark">×</span><span>TURN</span></div>
+   <button class="restart" id="restart" aria-label="Restart game" title="Restart game">⟳</button>
+  </header>
+  <div class="board" id="board" role="group" aria-label="Tic-Tac-Toe board"></div>
+  <section class="scoreboard" aria-label="Score">
+   <div class="score x"><span class="score-label">X (YOU)</span><strong class="score-number" id="x-score">0</strong></div>
+   <div class="score ties"><span class="score-label">TIES</span><strong class="score-number" id="tie-score">0</strong></div>
+   <div class="score o"><span class="score-label">O (CPU)</span><strong class="score-number" id="o-score">0</strong></div>
+  </section>
+  <p class="result" id="result" aria-live="polite"></p>
+  <div class="bottom-actions"><button class="soft-btn" id="menu-btn">← Game menu</button><button class="soft-btn" id="new-round">New round</button></div>
+ </div>
+</section>
+</main>
+<script>
+const menu=document.getElementById('menu'), gameScreen=document.getElementById('xox-screen'), boardEl=document.getElementById('board'), turnDisplay=document.getElementById('turn-display'), resultEl=document.getElementById('result');
+let cells=Array(9).fill(''), current='X', over=false, scores={X:0,O:0,T:0}, cpuTimer=null;
+const wins=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+function showScreen(screen){menu.classList.toggle('active',screen==='menu');gameScreen.classList.toggle('active',screen==='game');}
+function renderBoard(){boardEl.innerHTML='';cells.forEach((v,i)=>{const b=document.createElement('button');b.className='cell'+(v==='O'?' o':'');b.type='button';b.textContent=v==='X'?'×':v==='O'?'○':'';b.setAttribute('aria-label',v?('Cell '+(i+1)+': '+v):('Empty cell '+(i+1)));b.disabled=!!v||over||current!=='X';b.addEventListener('click',()=>play(i));boardEl.appendChild(b);});}
+function updateTurn(){turnDisplay.innerHTML=current==='X'?'<span class="turn-mark">×</span><span>TURN</span>':'<span class="turn-mark" style="color:var(--gold)">○</span><span>TURN</span>';turnDisplay.setAttribute('aria-label',current==='X'?'X turn':'O turn');}
+function updateScores(){document.getElementById('x-score').textContent=scores.X;document.getElementById('o-score').textContent=scores.O;document.getElementById('tie-score').textContent=scores.T;}
+function winner(){for(const line of wins){const [a,b,c]=line;if(cells[a]&&cells[a]===cells[b]&&cells[a]===cells[c])return cells[a];}return cells.every(Boolean)?'T':null;}
+function finish(outcome){over=true;if(outcome==='X'){scores.X++;resultEl.textContent='You win! Great move.';}else if(outcome==='O'){scores.O++;resultEl.textContent='CPU wins. Try again!';}else{scores.T++;resultEl.textContent="It's a tie!";}updateScores();renderBoard();}
+function play(i){if(over||current!=='X'||cells[i])return;cells[i]='X';const outcome=winner();if(outcome){renderBoard();finish(outcome);return;}current='O';updateTurn();renderBoard();cpuTimer=setTimeout(cpuMove,320);}
+function cpuMove(){cpuTimer=null;if(over||current!=='O')return;const i=bestMove();if(i<0)return;cells[i]='O';const outcome=winner();if(outcome){renderBoard();finish(outcome);return;}current='X';updateTurn();renderBoard();}
+function bestMove(){// Minimax: CPU plays optimally, taking wins and blocking losses.
+ let best=-Infinity, choice=-1;for(let i=0;i<9;i++){if(cells[i])continue;cells[i]='O';const score=minimax(false,0);cells[i]='';if(score>best){best=score;choice=i;}}return choice;}
+function minimax(maximizing,depth){const out=winner();if(out==='O')return 10-depth;if(out==='X')return depth-10;if(out==='T')return 0;if(maximizing){let best=-Infinity;for(let i=0;i<9;i++)if(!cells[i]){cells[i]='O';best=Math.max(best,minimax(false,depth+1));cells[i]='';}return best;}let best=Infinity;for(let i=0;i<9;i++)if(!cells[i]){cells[i]='X';best=Math.min(best,minimax(true,depth+1));cells[i]='';}return best;}
+function newRound(){clearTimeout(cpuTimer);cpuTimer=null;cells=Array(9).fill('');current='X';over=false;resultEl.textContent='';updateTurn();renderBoard();}
+document.getElementById('open-xox').addEventListener('click',()=>{showScreen('game');newRound();});
+document.getElementById('restart').addEventListener('click',newRound);
+document.getElementById('new-round').addEventListener('click',newRound);
+document.getElementById('menu-btn').addEventListener('click',()=>{clearTimeout(cpuTimer);cpuTimer=null;showScreen('menu');});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&gameScreen.classList.contains('active'))showScreen('menu');});
+updateTurn();updateScores();renderBoard();
+</script>
+</body>
+</html>
