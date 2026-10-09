@@ -77,6 +77,25 @@ html,body{width:100%;height:100%;min-height:0;overflow:hidden}
  .game-option{padding:12px;margin:8px 0}
 }
 
+
+/* Winner celebration shared by every game. */
+.celebration-overlay{position:fixed;inset:0;z-index:9999;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(8,22,27,.72);backdrop-filter:blur(5px);pointer-events:none}
+.celebration-overlay.show{display:flex;animation:celebrationFadeIn .22s ease-out both}
+.celebration-card{position:relative;overflow:hidden;width:min(92vw,420px);padding:clamp(28px,6vw,44px) 24px;border:2px solid rgba(48,194,189,.75);border-radius:28px;background:linear-gradient(145deg,#244752,#192d35 70%);box-shadow:0 18px 0 rgba(8,22,27,.45),0 0 55px rgba(48,194,189,.25);text-align:center;animation:winnerPop .55s cubic-bezier(.16,1.4,.4,1) both}
+.celebration-trophy{font-size:clamp(46px,12vw,68px);line-height:1.1;animation:trophyBounce .8s ease-in-out infinite alternate}
+.celebration-kicker{margin:12px 0 6px;color:var(--teal);font-size:clamp(12px,3vw,15px);font-weight:900;letter-spacing:.18em;text-transform:uppercase}
+.celebration-name{margin:0;color:var(--gold);font-size:clamp(28px,7vw,44px);font-weight:950;line-height:1.08;overflow-wrap:anywhere}
+.celebration-sub{margin:12px 0 0;color:var(--white);font-size:clamp(14px,3.5vw,18px);font-weight:700}
+.confetti-piece{position:absolute;top:-18px;width:9px;height:15px;border-radius:2px;animation:confettiFall 1.7s ease-in forwards;opacity:0}
+.confetti-piece:nth-child(1){left:7%;background:var(--teal);animation-delay:.02s}.confetti-piece:nth-child(2){left:18%;background:var(--gold);animation-delay:.3s}.confetti-piece:nth-child(3){left:31%;background:#f7f2dc;animation-delay:.12s}.confetti-piece:nth-child(4){left:43%;background:#ff7c92;animation-delay:.42s}.confetti-piece:nth-child(5){left:57%;background:var(--teal);animation-delay:.18s}.confetti-piece:nth-child(6){left:69%;background:var(--gold);animation-delay:.36s}.confetti-piece:nth-child(7){left:81%;background:#f7f2dc;animation-delay:.08s}.confetti-piece:nth-child(8){left:92%;background:#ff7c92;animation-delay:.25s}
+@keyframes winnerPop{0%{transform:scale(.55) rotate(-5deg);opacity:0}70%{transform:scale(1.05) rotate(1deg)}100%{transform:scale(1);opacity:1}}
+@keyframes trophyBounce{from{transform:translateY(0) rotate(-5deg)}to{transform:translateY(-7px) rotate(5deg)}}
+@keyframes confettiFall{0%{opacity:0;transform:translateY(-10px) rotate(0)}12%{opacity:1}100%{opacity:0;transform:translateY(340px) rotate(560deg)}}
+@keyframes celebrationFadeIn{from{opacity:0}to{opacity:1}}
+.celebration-overlay.hide{display:flex;animation:celebrationFadeOut .35s ease-in forwards}
+@keyframes celebrationFadeOut{to{opacity:0;visibility:hidden}}
+@media(prefers-reduced-motion:reduce){.celebration-overlay.show,.celebration-card,.celebration-trophy,.confetti-piece{animation-duration:.01ms!important;animation-iteration-count:1!important}}
+
 </style>
 </head>
 <body>
@@ -165,16 +184,27 @@ html,body{width:100%;height:100%;min-height:0;overflow:hidden}
  </div>
 </section>
 </main>
+<div class="celebration-overlay" id="celebration-overlay" aria-live="assertive" aria-atomic="true">
+ <div class="celebration-card">
+  <span class="confetti-piece"></span><span class="confetti-piece"></span><span class="confetti-piece"></span><span class="confetti-piece"></span><span class="confetti-piece"></span><span class="confetti-piece"></span><span class="confetti-piece"></span><span class="confetti-piece"></span>
+  <div class="celebration-trophy" aria-hidden="true">🏆</div>
+  <p class="celebration-kicker">Winner!</p>
+  <h2 class="celebration-name" id="celebration-name">Player wins!</h2>
+  <p class="celebration-sub">Amazing game! 🎉</p>
+ </div>
+</div>
 <script>
 const menu=document.getElementById('menu'), modeScreen=document.getElementById('mode-screen'), gameScreen=document.getElementById('xox-screen'), boardEl=document.getElementById('board'), turnDisplay=document.getElementById('turn-display'), resultEl=document.getElementById('result');
 let cells=Array(9).fill(''), current='X', over=false, mode='cpu', scores={X:0,O:0,T:0}, cpuTimer=null;
+let celebrationTimer=null;
+function showCelebration(playerName){const overlay=document.getElementById('celebration-overlay');const name=document.getElementById('celebration-name');clearTimeout(celebrationTimer);name.textContent=playerName+' wins!';overlay.classList.remove('hide');overlay.classList.remove('show');void overlay.offsetWidth;overlay.classList.add('show');celebrationTimer=setTimeout(()=>{overlay.classList.remove('show');overlay.classList.add('hide');setTimeout(()=>overlay.classList.remove('hide'),360);},2800);}
 const wins=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
 function showScreen(screen){menu.classList.toggle('active',screen==='menu');modeScreen.classList.toggle('active',screen==='mode');gameScreen.classList.toggle('active',screen==='game');document.getElementById('memory-mode-screen').classList.toggle('active',screen==='memorymode');document.getElementById('memory-screen').classList.toggle('active',screen==='memorygame');}
 function renderBoard(){boardEl.innerHTML='';cells.forEach((v,i)=>{const b=document.createElement('button');b.className='cell'+(v==='O'?' o':'');b.type='button';b.textContent=v==='X'?'×':v==='O'?'○':'';b.setAttribute('aria-label',v?('Cell '+(i+1)+': '+v):('Empty cell '+(i+1)));b.disabled=!!v||over||(mode==='cpu'&&current!=='X');b.addEventListener('click',()=>play(i));boardEl.appendChild(b);});}
 function updateTurn(){turnDisplay.innerHTML=current==='X'?'<span class="turn-mark">×</span><span>TURN</span>':'<span class="turn-mark" style="color:var(--gold)">○</span><span>TURN</span>';turnDisplay.setAttribute('aria-label',current==='X'?'X turn':'O turn');}
 function updateScores(){document.getElementById('x-score').textContent=scores.X;document.getElementById('o-score').textContent=scores.O;document.getElementById('tie-score').textContent=scores.T;document.getElementById('x-label').textContent=mode==='friend'?'X (FRIEND 1)':'X (YOU)';document.getElementById('o-label').textContent=mode==='friend'?'O (FRIEND 2)':'O (CPU)';}
 function winner(){for(const line of wins){const [a,b,c]=line;if(cells[a]&&cells[a]===cells[b]&&cells[a]===cells[c])return cells[a];}return cells.every(Boolean)?'T':null;}
-function finish(outcome){over=true;if(outcome==='X'){scores.X++;resultEl.textContent=mode==='friend'?'Friend 1 wins! Great move.':'You win! Great move.';}else if(outcome==='O'){scores.O++;resultEl.textContent=mode==='friend'?'Friend 2 wins! Great move.':'CPU wins. Try again!';}else{scores.T++;resultEl.textContent="It's a tie!";}updateScores();renderBoard();}
+function finish(outcome){over=true;if(outcome==='X'){scores.X++;const winnerName=mode==='friend'?'Friend 1':'You';resultEl.textContent=winnerName+' wins! Great move.';showCelebration(winnerName);}else if(outcome==='O'){scores.O++;const winnerName=mode==='friend'?'Friend 2':'CPU';resultEl.textContent=winnerName+' wins! Great move.';showCelebration(winnerName);}else{scores.T++;resultEl.textContent="It's a tie!";}updateScores();renderBoard();}
 function play(i){if(over||cells[i]||(mode==='cpu'&&current!=='X'))return;cells[i]=current;const outcome=winner();if(outcome){renderBoard();finish(outcome);return;}if(cells.every(Boolean)){finish('T');return;}current=current==='X'?'O':'X';updateTurn();renderBoard();if(mode==='cpu'&&current==='O')cpuTimer=setTimeout(cpuMove,320);}
 function cpuMove(){cpuTimer=null;if(over||current!=='O')return;const i=bestMove();if(i<0)return;cells[i]='O';const outcome=winner();if(outcome){renderBoard();finish(outcome);return;}current='X';updateTurn();renderBoard();}
 function bestMove(){// Minimax: CPU plays optimally, taking wins and blocking losses.
@@ -204,7 +234,7 @@ function flipMemory(i){if(memoryLocked||memoryCards[i].matched||memoryOpen.inclu
 function rememberMemory(i){const c=memoryCards[i];if(!c.bonus){if(!memoryKnown.has(c.pair))memoryKnown.set(c.pair,new Set());memoryKnown.get(c.pair).add(i);memorySeen.add(i);}}
 function advanceMemoryTurn(keepTurn){if(!keepTurn)memoryCurrent=memoryCurrent==='X'?'O':'X';updateMemoryHud();renderMemoryBoard();if(memoryMode==='cpu'&&memoryCurrent==='O')memoryCpuTimer=setTimeout(cpuMemoryTurn,500);}
 function cpuMemoryTurn(){memoryCpuTimer=null;if(memoryLocked||memoryCurrent!=='O'||memoryMatched===12)return;const difficulty=document.getElementById('memory-difficulty').value;let choice=-1;const unmatched=memoryCards.map((c,i)=>({c,i})).filter(x=>!x.c.matched&&!x.c.bonus&&!memoryOpen.includes(x.i));const knownPairs=[];for(const [pair,ids] of memoryKnown.entries()){const remain=[...ids].filter(i=>!memoryCards[i].matched);if(remain.length>=2)knownPairs.push(remain.slice(0,2));}if(knownPairs.length&&(difficulty==='hard'||Math.random()<(difficulty==='medium'?.72:.35))){choice=knownPairs[0][0];}else{const candidates=unmatched.filter(x=>!memorySeen.has(x.i));choice=(candidates.length?candidates:unmatched)[Math.floor(Math.random()*(candidates.length?candidates:unmatched).length)]?.i??-1;}if(choice<0){finishMemory();return;}memoryOpen=[choice];rememberMemory(choice);renderMemoryBoard();setTimeout(()=>{if(memoryCards[choice].bonus){memoryCards[choice].matched=true;memoryScores.O++;memoryScores.B++;memoryOpen=[];updateMemoryHud();advanceMemoryTurn(true);return;}let match=-1;const pair=memoryCards[choice].pair;const remembered=memoryKnown.get(pair);if(remembered){match=[...remembered].find(i=>i!==choice&&!memoryCards[i].matched);}if(match===undefined||match===-1){const opts=memoryCards.map((c,i)=>({c,i})).filter(x=>x.i!==choice&&!x.c.matched&&!x.c.bonus&&x.c.pair===pair);if(opts.length)match=opts[0].i;}if(match!==-1&&match!==undefined&&(difficulty==='hard'||Math.random()<(difficulty==='medium'?.72:.35))){memoryOpen=[choice,match];rememberMemory(match);renderMemoryBoard();setTimeout(()=>{memoryCards[choice].matched=memoryCards[match].matched=true;memoryMatched++;memoryScores.O++;memoryOpen=[];memoryLocked=false;updateMemoryHud();if(memoryMatched===12)finishMemory();else{renderMemoryBoard();setTimeout(cpuMemoryTurn,420);}},500);}else{const secondOpts=memoryCards.map((c,i)=>({c,i})).filter(x=>x.i!==choice&&!x.c.matched&&!x.c.bonus);const second=secondOpts[Math.floor(Math.random()*secondOpts.length)];if(!second){memoryOpen=[];advanceMemoryTurn(false);return;}memoryOpen=[choice,second.i];rememberMemory(second.i);renderMemoryBoard();setTimeout(()=>{memoryOpen=[];memoryCurrent='X';updateMemoryHud();renderMemoryBoard();},800);}},500);}
-function finishMemory(){clearTimeout(memoryCpuTimer);memoryCpuTimer=null;memoryLocked=true;renderMemoryBoard();const x=memoryScores.X,o=memoryScores.O;if(x>o)memoryResult.textContent=memoryMode==='friend'?'Player 1 wins! 🎉':'You win! 🎉';else if(o>x)memoryResult.textContent=memoryMode==='friend'?'Player 2 wins! 🎉':'AI wins this round. Try again!';else memoryResult.textContent='It’s a tie! Great memory! 🤝';memoryResult.textContent+=' Final score: '+x+' – '+o+'.';}
+function finishMemory(){clearTimeout(memoryCpuTimer);memoryCpuTimer=null;memoryLocked=true;renderMemoryBoard();const x=memoryScores.X,o=memoryScores.O;if(x>o){const winnerName=memoryMode==='friend'?'Player 1':'You';memoryResult.textContent=winnerName+' wins! 🎉';showCelebration(winnerName);}else if(o>x){const winnerName=memoryMode==='friend'?'Player 2':'AI';memoryResult.textContent=winnerName+' wins! 🎉';showCelebration(winnerName);}else memoryResult.textContent='It’s a tie! Great memory! 🤝';memoryResult.textContent+=' Final score: '+x+' – '+o+'.';}
 document.getElementById('open-memory').addEventListener('click',()=>showMemoryScreen('memorymode'));
 document.getElementById('memory-friend').addEventListener('click',()=>{memoryMode='friend';showMemoryScreen('memorygame');setupMemory();});
 document.getElementById('memory-cpu').addEventListener('click',()=>{memoryMode='cpu';showMemoryScreen('memorygame');setupMemory();});
