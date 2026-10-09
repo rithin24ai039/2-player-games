@@ -96,6 +96,41 @@ html,body{width:100%;height:100%;min-height:0;overflow:hidden}
 @keyframes celebrationFadeOut{to{opacity:0;visibility:hidden}}
 @media(prefers-reduced-motion:reduce){.celebration-overlay.show,.celebration-card,.celebration-trophy,.confetti-piece{animation-duration:.01ms!important;animation-iteration-count:1!important}}
 
+
+/* Battleship: compact responsive two-fleet game. */
+.battle-mode-screen .menu-panel{max-width:600px;margin:auto}
+.battle-wrap{width:min(100%,820px);height:100%;max-height:100%;display:flex;flex-direction:column;justify-content:center;gap:clamp(5px,1vh,10px);padding:0 clamp(4px,1.2vw,12px);margin:auto}
+.battle-head{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-shrink:0}
+.battle-brand{font-weight:950;font-size:clamp(19px,3.6vw,31px);line-height:1;letter-spacing:-.04em}
+.battle-brand span:first-child{color:var(--teal)}.battle-brand span:last-child{color:var(--gold)}
+.battle-caption{font-size:clamp(10px,1.6vh,13px);color:var(--pale);font-weight:750;text-align:right}
+.battle-status{font-size:clamp(11px,1.8vh,14px);font-weight:800;color:var(--pale);text-align:center;min-height:1.25em}
+.battle-fleet{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:clamp(5px,1vw,10px);min-height:26px}
+.ship-chip{font-size:clamp(10px,1.7vh,13px);font-weight:850;color:var(--teal);background:#203943;border:1px solid #385763;border-radius:8px;padding:4px 7px;white-space:nowrap}
+.ship-chip.sunk{background:#080e11;border-color:#080e11;color:#080e11;text-shadow:0 0 1px #6e858b}
+.battle-grids{display:grid;grid-template-columns:1fr 1fr;gap:clamp(10px,2vw,18px);align-items:start;min-height:0}
+.battle-side{min-width:0;background:#203943;border-radius:13px;padding:clamp(6px,1.2vw,10px);box-shadow:0 4px 0 #10242b}
+.battle-side-title{display:flex;justify-content:space-between;align-items:center;gap:4px;font-size:clamp(11px,1.8vh,14px);font-weight:900;margin:0 0 6px}
+.battle-side-title small{color:var(--pale);font-size:clamp(9px,1.4vh,11px)}
+.battle-grid{display:grid;grid-template-columns:repeat(9,minmax(0,1fr));gap:clamp(2px,.45vw,4px);width:100%}
+.battle-tile{aspect-ratio:1;min-width:0;min-height:0;padding:0;border-radius:clamp(2px,.5vw,5px);background:#294852;color:var(--pale);box-shadow:inset 0 -2px 0 #10242b;font-size:clamp(8px,1.8vh,15px);font-weight:900;display:grid;place-items:center;line-height:1}
+.battle-tile.ship{background:#30c2bd;color:#192d35;box-shadow:inset 0 -2px 0 #168e8b}
+.battle-tile.hit{background:#090e10;color:#ff7786;box-shadow:inset 0 0 0 1px #ff7786}
+.battle-tile.miss{background:#aec4ce;color:#192d35}
+.battle-tile.sunk-tile{background:#080e11;color:#080e11;box-shadow:inset 0 0 0 1px #41535a}
+.battle-tile:disabled{cursor:default;opacity:1}
+.battle-tile.target:not(:disabled):hover{background:var(--gold);color:var(--ink);transform:scale(1.04)}
+.battle-setup-tools{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
+.battle-setup-tools .soft-btn{padding:8px 12px}
+.battle-ship-list{display:flex;justify-content:center;flex-wrap:wrap;gap:5px;color:var(--pale);font-size:11px}
+.battle-ship-list span{border-radius:7px;padding:5px 8px;background:#203943}
+.battle-ship-list .placed{background:var(--teal);color:var(--ink);font-weight:900}
+.battle-note{text-align:center;color:var(--pale);font-size:clamp(10px,1.5vh,12px);margin:0;min-height:1.2em}
+.battle-actions{display:flex;justify-content:center;gap:8px;margin-top:2px}
+.battle-actions .soft-btn{padding:8px 12px}
+@media(max-width:420px){.battle-wrap{padding:0 2px;gap:5px}.battle-grids{gap:6px}.battle-side{padding:5px 4px}.battle-side-title{font-size:10px}.battle-grid{gap:2px}.battle-tile{font-size:clamp(7px,2.3vw,10px);border-radius:2px}.ship-chip{padding:3px 5px}.battle-brand{font-size:20px}}
+@media(max-height:600px){.battle-wrap{gap:3px}.battle-side{padding:4px}.battle-side-title{margin-bottom:3px}.battle-fleet{min-height:20px}.battle-tile{font-size:10px}.battle-actions .soft-btn{padding:5px 9px}.battle-status{min-height:1em}}
+
 </style>
 </head>
 <body>
@@ -109,6 +144,11 @@ html,body{width:100%;height:100%;min-height:0;overflow:hidden}
    <button class="game-option" id="open-xox">
     <span class="mini"><img class="xo-logo" src="assets/xo-logo.svg" alt="XO"></span>
     <span><strong>XOX Game</strong><small>Classic Tic-Tac-Toe · Choose your opponent</small></span>
+    <span class="arrow" aria-hidden="true">›</span>
+   </button>
+   <button class="game-option" id="open-battleship">
+    <span class="mini" aria-hidden="true">🚢</span>
+    <span><strong>Battleship</strong><small>Hide your fleet · Hunt the enemy ships</small></span>
     <span class="arrow" aria-hidden="true">›</span>
    </button>
    <button class="game-option" id="open-memory">
@@ -148,6 +188,50 @@ html,body{width:100%;height:100%;min-height:0;overflow:hidden}
   </div>
  </div>
 </section>
+
+<section class="screen battle-mode-screen" id="battle-mode-screen" aria-label="Choose Battleship opponent">
+ <div class="menu-wrap">
+  <h1 class="logo"><span style="color:var(--teal)">BATTLE</span><span style="color:var(--gold)">SHIP</span></h1>
+  <p class="sub">Hide your fleet. Find theirs. Sink every ship.</p>
+  <div class="menu-panel">
+   <h2 class="menu-title">CHOOSE YOUR OPPONENT</h2>
+   <div class="mode-actions">
+    <button class="mode-btn" id="battle-friend"><span class="mode-icon">👥</span><strong>Play with Friend</strong><small>Two players · Same device</small></button>
+    <button class="mode-btn" id="battle-cpu"><span class="mode-icon">🤖</span><strong>Play with Bot</strong><small>Bot hides and hunts strategically</small></button>
+   </div>
+   <div class="bottom-actions"><button class="soft-btn" id="battle-back-menu">← Game menu</button></div>
+  </div>
+ </div>
+</section>
+<section class="screen game-screen" id="battle-setup-screen" aria-label="Place Battleship fleet">
+ <div class="battle-wrap">
+  <header class="battle-head"><div class="battle-brand"><span>BATTLE</span><span>SHIP</span></div><div class="battle-caption" id="battle-setup-player">PLAYER 1 · HIDE YOUR FLEET</div></header>
+  <div class="battle-status" id="battle-setup-status">Place the 4-tile ship. Tap a tile, then choose orientation.</div>
+  <div class="battle-ship-list" id="battle-ship-list"></div>
+  <div class="battle-grids">
+   <div class="battle-side"><h3 class="battle-side-title"><span>Your ground</span><small>7 × 9</small></h3><div class="battle-grid" id="battle-setup-grid"></div></div>
+   <div class="battle-side"><h3 class="battle-side-title"><span>Ship preview</span><small id="battle-preview-size">4 tiles</small></h3><div class="battle-grid" id="battle-preview-grid"></div></div>
+  </div>
+  <p class="battle-note" id="battle-setup-note">Ships: 4, 4, 3, 3, 2 tiles. Ships cannot overlap.</p>
+  <div class="battle-setup-tools"><button class="soft-btn" id="battle-orientation">↔ Horizontal</button><button class="soft-btn" id="battle-random">Random placement</button><button class="soft-btn" id="battle-setup-continue">Confirm fleet →</button></div>
+  <div class="battle-actions"><button class="soft-btn" id="battle-setup-menu">← Game menu</button></div>
+ </div>
+</section>
+<section class="screen game-screen" id="battle-game-screen" aria-label="Battleship battle">
+ <div class="battle-wrap">
+  <header class="battle-head"><div class="battle-brand"><span>BATTLE</span><span>SHIP</span></div><div class="battle-caption" id="battle-turn-caption">YOUR TURN · FIRE AT ENEMY</div></header>
+  <div class="battle-status" id="battle-status">Choose a tile on the enemy ground.</div>
+  <div class="battle-fleet" id="battle-own-fleet"></div>
+  <div class="battle-grids">
+   <div class="battle-side"><h3 class="battle-side-title"><span id="battle-own-title">Your ground</span><small id="battle-own-count">Ships: 5</small></h3><div class="battle-grid" id="battle-own-grid"></div></div>
+   <div class="battle-side"><h3 class="battle-side-title"><span id="battle-target-title">Enemy ground</span><small id="battle-target-count">Ships: 5</small></h3><div class="battle-grid" id="battle-target-grid"></div></div>
+  </div>
+  <div class="battle-fleet" id="battle-enemy-fleet"></div>
+  <p class="battle-note" id="battle-note">Hit every ship tile to win.</p>
+  <div class="battle-actions"><button class="soft-btn" id="battle-new-round">New game</button><button class="soft-btn" id="battle-game-menu">← Game menu</button></div>
+ </div>
+</section>
+
 <section class="screen game-screen" id="memory-screen" aria-label="Memory Match game">
  <div class="game memory-game">
   <header class="topbar memory-topbar">
@@ -199,7 +283,7 @@ let cells=Array(9).fill(''), current='X', over=false, mode='cpu', scores={X:0,O:
 let celebrationTimer=null;
 function showCelebration(playerName){const overlay=document.getElementById('celebration-overlay');const name=document.getElementById('celebration-name');clearTimeout(celebrationTimer);name.textContent=playerName+' wins!';overlay.classList.remove('hide');overlay.classList.remove('show');void overlay.offsetWidth;overlay.classList.add('show');celebrationTimer=setTimeout(()=>{overlay.classList.remove('show');overlay.classList.add('hide');setTimeout(()=>overlay.classList.remove('hide'),360);},2800);}
 const wins=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
-function showScreen(screen){menu.classList.toggle('active',screen==='menu');modeScreen.classList.toggle('active',screen==='mode');gameScreen.classList.toggle('active',screen==='game');document.getElementById('memory-mode-screen').classList.toggle('active',screen==='memorymode');document.getElementById('memory-screen').classList.toggle('active',screen==='memorygame');}
+function showScreen(screen){menu.classList.toggle('active',screen==='menu');modeScreen.classList.toggle('active',screen==='mode');gameScreen.classList.toggle('active',screen==='game');document.getElementById('memory-mode-screen').classList.toggle('active',screen==='memorymode');document.getElementById('memory-screen').classList.toggle('active',screen==='memorygame');document.getElementById('battle-mode-screen').classList.toggle('active',screen==='battlemode');document.getElementById('battle-setup-screen').classList.toggle('active',screen==='battlesetup');document.getElementById('battle-game-screen').classList.toggle('active',screen==='battlegame');}
 function renderBoard(){boardEl.innerHTML='';cells.forEach((v,i)=>{const b=document.createElement('button');b.className='cell'+(v==='O'?' o':'');b.type='button';b.textContent=v==='X'?'×':v==='O'?'○':'';b.setAttribute('aria-label',v?('Cell '+(i+1)+': '+v):('Empty cell '+(i+1)));b.disabled=!!v||over||(mode==='cpu'&&current!=='X');b.addEventListener('click',()=>play(i));boardEl.appendChild(b);});}
 function updateTurn(){turnDisplay.innerHTML=current==='X'?'<span class="turn-mark">×</span><span>TURN</span>':'<span class="turn-mark" style="color:var(--gold)">○</span><span>TURN</span>';turnDisplay.setAttribute('aria-label',current==='X'?'X turn':'O turn');}
 function updateScores(){document.getElementById('x-score').textContent=scores.X;document.getElementById('o-score').textContent=scores.O;document.getElementById('tie-score').textContent=scores.T;document.getElementById('x-label').textContent=mode==='friend'?'X (FRIEND 1)':'X (YOU)';document.getElementById('o-label').textContent=mode==='friend'?'O (FRIEND 2)':'O (CPU)';}
@@ -282,6 +366,40 @@ document.getElementById('memory-menu-btn').addEventListener('click',()=>{clearTi
 document.getElementById('memory-difficulty').addEventListener('change',()=>{memoryKnown=new Map();memorySeen=new Set();});
 
 updateTurn();updateScores();renderBoard();
+
+/* Battleship: two private placement phases, then turn-based fleet combat. */
+const B_ROWS=7,B_COLS=9,B_SHIPS=[4,4,3,3,2];
+let battleMode='cpu',battlePhase='setup',battlePlayer=0,battlePlacementIndex=0,battleHorizontal=true,battleSelected=null,battleFleets=[],battleShots=[],battleSunk=[],battleOver=false,battleCpuTimer=null,battleLastHit=null,battleCpuTargets=[];
+function battleEmpty(){return Array.from({length:B_ROWS*B_COLS},()=>null);}
+function battleCoords(i){return {r:Math.floor(i/B_COLS),c:i%B_COLS};}
+function battleCells(start,len,horizontal){const {r,c}=battleCoords(start),a=[];for(let k=0;k<len;k++){const rr=r+(horizontal?0:k),cc=c+(horizontal?k:0);if(rr>=B_ROWS||cc>=B_COLS)return null;a.push(rr*B_COLS+cc);}return a;}
+function battleCanPlace(board,indices){return !!indices&&indices.every(i=>board[i]===null);}
+function battlePlace(board,indices,shipId){indices.forEach(i=>board[i]=shipId);}
+function battleRandomFleet(){const b=battleEmpty(),ships=[];for(let si=0;si<B_SHIPS.length;si++){let placed=false;for(let tries=0;tries<500&&!placed;tries++){const start=Math.floor(Math.random()*b.length),h=Math.random()<.5,idx=battleCells(start,B_SHIPS[si],h);if(battleCanPlace(b,idx)){battlePlace(b,idx,si);ships[si]=idx;placed=true;}}if(!placed)return battleRandomFleet();}return {board:b,ships};}
+function battleBuildShipList(){const el=document.getElementById('battle-ship-list');el.innerHTML='';B_SHIPS.forEach((n,i)=>{const x=document.createElement('span');x.textContent=(i+1)+': '+n+' tiles';if(i<battlePlacementIndex)x.className='placed';el.appendChild(x);});}
+function battleSetupStart(player){battlePhase='setup';battlePlayer=player;battlePlacementIndex=0;battleHorizontal=true;battleSelected=null;battleFleets[player]={board:battleEmpty(),ships:[]};document.getElementById('battle-setup-player').textContent=(battleMode==='friend'?'PLAYER '+(player+1):'YOU')+' · HIDE YOUR FLEET';document.getElementById('battle-setup-note').textContent=battleMode==='friend'&&player===1?'Player 1 fleet is hidden. Place your own fleet privately.':'Ships: 4, 4, 3, 3, 2 tiles. Ships cannot overlap.';document.getElementById('battle-setup-status').textContent='Place your '+B_SHIPS[0]+'-tile ship. Tap a tile, then confirm.';document.getElementById('battle-setup-continue').textContent='Confirm fleet →';battleBuildShipList();battleRenderSetup();showScreen('battlesetup');}
+function battleRenderSetup(){const grid=document.getElementById('battle-setup-grid');grid.innerHTML='';const board=battleFleets[battlePlayer]?.board||battleEmpty();for(let i=0;i<board.length;i++){const b=document.createElement('button');b.type='button';b.className='battle-tile'+(board[i]!==null?' ship':'');b.textContent=board[i]!==null?'■':'';b.setAttribute('aria-label','Row '+(Math.floor(i/B_COLS)+1)+', column '+(i%B_COLS+1));b.addEventListener('click',()=>{battleSelected=i;battleRenderSetup();});if(battleSelected!==null){const preview=battleCells(battleSelected,B_SHIPS[battlePlacementIndex]||2,battleHorizontal);if(preview?.includes(i)&&board[i]===null)b.style.background='#f6b735';}grid.appendChild(b);}const pg=document.getElementById('battle-preview-grid');pg.innerHTML='';const len=B_SHIPS[battlePlacementIndex]||2;document.getElementById('battle-preview-size').textContent=len+' tiles';for(let i=0;i<63;i++){const b=document.createElement('button');b.type='button';b.className='battle-tile';if(battleSelected!==null){const inds=battleCells(battleSelected,len,battleHorizontal);if(inds?.includes(i))b.classList.add('ship');}b.disabled=true;pg.appendChild(b);}document.getElementById('battle-orientation').textContent=battleHorizontal?'↔ Horizontal':'↕ Vertical';}
+function battleTryPlacement(){if(battleSelected===null){document.getElementById('battle-setup-status').textContent='Tap a starting tile on your ground first.';return;}const len=B_SHIPS[battlePlacementIndex],idx=battleCells(battleSelected,len,battleHorizontal),board=battleFleets[battlePlayer].board;if(!battleCanPlace(board,idx)){document.getElementById('battle-setup-status').textContent='That ship does not fit there or overlaps another ship. Try again.';return;}battlePlace(board,idx,battlePlacementIndex);battleFleets[battlePlayer].ships[battlePlacementIndex]=idx;battlePlacementIndex++;battleSelected=null;battleBuildShipList();if(battlePlacementIndex===B_SHIPS.length){document.getElementById('battle-setup-status').textContent='All five ships placed. Confirm fleet to continue.';document.getElementById('battle-setup-continue').textContent=battleMode==='friend'&&battlePlayer===0?'Hide fleet & pass device →':'Start battle →';}else document.getElementById('battle-setup-status').textContent='Now place your '+B_SHIPS[battlePlacementIndex]+'-tile ship.';battleRenderSetup();}
+function battleRandomPlacement(){const f=battleRandomFleet();battleFleets[battlePlayer]=f;battlePlacementIndex=B_SHIPS.length;battleSelected=null;battleBuildShipList();battleRenderSetup();document.getElementById('battle-setup-status').textContent='Fleet randomly placed. Confirm when ready.';document.getElementById('battle-setup-continue').textContent=battleMode==='friend'&&battlePlayer===0?'Hide fleet & pass device →':'Start battle →';}
+function battleConfirmSetup(){if(battlePlacementIndex<B_SHIPS.length){battleTryPlacement();return;}if(battleMode==='friend'&&battlePlayer===0){battleSetupStart(1);document.getElementById('battle-setup-status').textContent='Player 2: place your fleet, then confirm.';return;}if(battleMode==='cpu'){battleFleets[1]=battleRandomFleet();}battleStartCombat();}
+function battleStartCombat(){battlePhase='combat';battlePlayer=0;battleShots=[new Set(),new Set()];battleSunk=[new Set(),new Set()];battleOver=false;battleLastHit=null;battleCpuTargets=[];clearTimeout(battleCpuTimer);battleCpuTimer=null;showScreen('battlegame');battleRenderCombat();document.getElementById('battle-status').textContent=battleMode==='friend'?'Player 1: choose a tile on Player 2 ground.':'Your turn: fire at a tile on the enemy ground.';}
+function battleRenderFleet(el,player){el.innerHTML='';B_SHIPS.forEach((n,si)=>{const x=document.createElement('span');x.className='ship-chip'+(battleSunk[player]?.has(si)?' sunk':'');x.textContent='🚢 '+n+' tiles';el.appendChild(x);});}
+function battleRenderGrid(el,owner,attacker,targeting){el.innerHTML='';const f=battleFleets[owner],shots=battleShots[attacker]||new Set();for(let i=0;i<63;i++){const b=document.createElement('button');b.type='button';b.className='battle-tile';const ship=f.board[i],shot=shots.has(i);if(shot&&ship!==null){b.classList.add(battleSunk[owner]?.has(ship)?'sunk-tile':'hit');b.textContent=battleSunk[owner]?.has(ship)?'':'×';}else if(shot){b.classList.add('miss');b.textContent='·';}else if(!targeting&&ship!==null){b.classList.add('ship');b.textContent='■';}if(targeting){b.classList.add('target');b.disabled=battleOver||shot||(battleMode==='cpu'&&battlePlayer!==0);b.addEventListener('click',()=>battleFire(i));}else b.disabled=true;b.setAttribute('aria-label',(shot?(ship!==null?'Hit':'Miss'):(ship!==null&&!targeting?'Ship':'Unknown'))+', row '+(Math.floor(i/B_COLS)+1)+', column '+(i%B_COLS+1));el.appendChild(b);}}
+function battleRenderCombat(){const own=battleMode==='friend'?battlePlayer:0,enemy=1-own;document.getElementById('battle-turn-caption').textContent=battleOver?'BATTLE OVER':battleMode==='friend'?'PLAYER '+(battlePlayer+1)+' · FIRE AT ENEMY':'YOUR TURN · FIRE AT ENEMY';document.getElementById('battle-own-title').textContent=(battleMode==='friend'?'Player '+(own+1):'Your')+' ground';document.getElementById('battle-target-title').textContent=(battleMode==='friend'?'Player '+(enemy+1):'Enemy')+' ground';document.getElementById('battle-own-count').textContent='Ships: '+(5-battleSunk[own].size);document.getElementById('battle-target-count').textContent='Ships: '+(5-battleSunk[enemy].size);battleRenderGrid(document.getElementById('battle-own-grid'),own,enemy,false);battleRenderGrid(document.getElementById('battle-target-grid'),enemy,own,true);battleRenderFleet(document.getElementById('battle-own-fleet'),own);battleRenderFleet(document.getElementById('battle-enemy-fleet'),enemy);}
+function battleFire(i){if(battleOver||(battleMode==='cpu'&&battlePlayer!==0))return;const attacker=battleMode==='friend'?battlePlayer:0,defender=1-attacker;if(battleShots[attacker].has(i))return;battleShots[attacker].add(i);const ship=battleFleets[defender].board[i];let message;if(ship!==null){const shipCells=battleFleets[defender].ships[ship];if(shipCells.every(x=>battleShots[attacker].has(x))){battleSunk[defender].add(ship);message='HIT! You sank a '+B_SHIPS[ship]+'-tile ship!';}else message='HIT! Keep hunting.';}else message='Miss. Water only.';document.getElementById('battle-status').textContent=message;if(battleSunk[defender].size===5){battleOver=true;const winnerName=battleMode==='friend'?'Player '+(attacker+1):'You';document.getElementById('battle-status').textContent=winnerName+' sank the entire fleet and wins!';document.getElementById('battle-note').textContent='All enemy ships destroyed. Start a new game for another battle.';battleRenderCombat();showCelebration(winnerName);return;}if(battleMode==='friend'){battlePlayer=defender;document.getElementById('battle-note').textContent='Pass the device to Player '+(battlePlayer+1)+'. Your ships stay on your own ground.';}else document.getElementById('battle-note').textContent=ship!==null?'Direct hit! The bot is preparing its move.':'The bot is preparing its move.';battleRenderCombat();if(battleMode==='cpu'){battlePlayer=1;battleCpuTimer=setTimeout(battleCpuFire,600);}else{document.getElementById('battle-turn-caption').textContent='PLAYER '+(battlePlayer+1)+' · FIRE AT ENEMY';}}
+function battleCpuFire(){battleCpuTimer=null;if(battleOver)return;const board=battleFleets[0].board,shots=battleShots[1];let choices=battleCpuTargets.filter(i=>!shots.has(i));if(!choices.length){const candidates=[];for(let i=0;i<63;i++)if(!shots.has(i)){const {r,c}=battleCoords(i);if((r+c)%2===0)candidates.push(i);}const fallback=[];for(let i=0;i<63;i++)if(!shots.has(i))fallback.push(i);choices=candidates.length?candidates:fallback;}const i=choices[Math.floor(Math.random()*choices.length)];if(i===undefined)return;battleCpuTargets=battleCpuTargets.filter(x=>!shots.has(x)&&x!==i);shots.add(i);const ship=board[i];let message;if(ship!==null){const cells=battleFleets[0].ships[ship];const {r,c}=battleCoords(i);[[r-1,c],[r+1,c],[r,c-1],[r,c+1]].forEach(([rr,cc])=>{if(rr>=0&&rr<B_ROWS&&cc>=0&&cc<B_COLS){const j=rr*B_COLS+cc;if(!shots.has(j))battleCpuTargets.push(j);}});if(cells.every(x=>shots.has(x))){battleSunk[0].add(ship);battleCpuTargets=battleCpuTargets.filter(x=>!cells.includes(x));message='Bot hit and sank one of your ships!';}else message='Bot hit one of your ships!';}else message='Bot missed.';document.getElementById('battle-status').textContent=message;if(battleSunk[0].size===5){battleOver=true;document.getElementById('battle-status').textContent='The bot sank your entire fleet and wins.';document.getElementById('battle-note').textContent='All your ships were destroyed. Start a new game to try again.';battleRenderCombat();showCelebration('Bot');return;}battlePlayer=0;document.getElementById('battle-note').textContent='Your turn. Choose any tile not already fired upon.';battleRenderCombat();}
+function battleNewGame(){clearTimeout(battleCpuTimer);battleCpuTimer=null;battleFleets=[];battleShots=[];battleSunk=[];battleOver=false;battleSetupStart(0);}
+document.getElementById('open-battleship').addEventListener('click',()=>showScreen('battlemode'));
+document.getElementById('battle-friend').addEventListener('click',()=>{battleMode='friend';battleNewGame();});
+document.getElementById('battle-cpu').addEventListener('click',()=>{battleMode='cpu';battleNewGame();});
+document.getElementById('battle-back-menu').addEventListener('click',()=>showScreen('menu'));
+document.getElementById('battle-orientation').addEventListener('click',()=>{battleHorizontal=!battleHorizontal;battleRenderSetup();});
+document.getElementById('battle-random').addEventListener('click',battleRandomPlacement);
+document.getElementById('battle-setup-continue').addEventListener('click',battleConfirmSetup);
+document.getElementById('battle-setup-menu').addEventListener('click',()=>showScreen('menu'));
+document.getElementById('battle-new-round').addEventListener('click',battleNewGame);
+document.getElementById('battle-game-menu').addEventListener('click',()=>{clearTimeout(battleCpuTimer);battleCpuTimer=null;showScreen('menu');});
+
 </script>
 </body>
 </html>
