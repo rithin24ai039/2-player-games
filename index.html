@@ -347,7 +347,7 @@ const menu=document.getElementById('menu'), modeScreen=document.getElementById('
 let cells=Array(9).fill(''), current='X', over=false, mode='cpu', scores={X:0,O:0,T:0}, cpuTimer=null;
 let selectedOpponent='cpu';
 const gameStats=loadGameStats();
-function loadGameStats(){try{return JSON.parse(localStorage.getItem('twoPlayerGamesStats'))||{xox:{you:0,other:0,ties:0},battle:{you:0,other:0},memory:{you:0,other:0,ties:0},overall:{you:0,other:0}};}catch(e){return {xox:{you:0,other:0,ties:0},battle:{you:0,other:0},memory:{you:0,other:0,ties:0},overall:{you:0,other:0}};}}
+function loadGameStats(){const fresh={xox:{you:0,other:0,ties:0},battle:{you:0,other:0},memory:{you:0,other:0,ties:0},overall:{you:0,other:0}};try{localStorage.removeItem('twoPlayerGamesStats');}catch(e){}return fresh;}
 function saveGameStats(){try{localStorage.setItem('twoPlayerGamesStats',JSON.stringify(gameStats));}catch(e){}renderGameStats();}
 function recordWin(game,winner){const mine=winner==='you';gameStats[game][mine?'you':'other']++;gameStats.overall[mine?'you':'other']++;saveGameStats();}
 function recordTie(game){if(gameStats[game].ties!==undefined)gameStats[game].ties++;saveGameStats();}
