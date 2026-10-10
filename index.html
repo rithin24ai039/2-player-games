@@ -358,7 +358,7 @@ function bestMove(){// Minimax: CPU plays optimally, taking wins and blocking lo
  let best=-Infinity, choice=-1;for(let i=0;i<9;i++){if(cells[i])continue;cells[i]='O';const score=minimax(false,0);cells[i]='';if(score>best){best=score;choice=i;}}return choice;}
 function minimax(maximizing,depth){const out=winner();if(out==='O')return 10-depth;if(out==='X')return depth-10;if(out==='T')return 0;if(maximizing){let best=-Infinity;for(let i=0;i<9;i++)if(!cells[i]){cells[i]='O';best=Math.max(best,minimax(false,depth+1));cells[i]='';}return best;}let best=Infinity;for(let i=0;i<9;i++)if(!cells[i]){cells[i]='X';best=Math.min(best,minimax(true,depth+1));cells[i]='';}return best;}
 function newRound(){clearTimeout(cpuTimer);cpuTimer=null;cells=Array(9).fill('');current='X';over=false;resultEl.textContent='';updateTurn();renderBoard();}
-document.getElementById('open-xox').addEventListener('click',()=>{mode=selectedOpponent==='friend'?'friend':'cpu';resetGame();showScreen('game');});
+document.getElementById('open-xox').addEventListener('click',()=>{mode=selectedOpponent==='friend'?'friend':'cpu';newRound();updateScores();showScreen('game');});
 document.getElementById('play-friend').addEventListener('click',()=>{mode='friend';showScreen('game');newRound();updateScores();});
 document.getElementById('play-cpu').addEventListener('click',()=>{mode='cpu';showScreen('game');newRound();updateScores();});
 document.getElementById('back-menu').addEventListener('click',()=>showScreen('menu'));
