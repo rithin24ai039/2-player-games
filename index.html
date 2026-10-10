@@ -178,6 +178,47 @@ html,body{width:100%;height:100%;min-height:0;overflow:hidden}
 @media(max-width:420px){.battle-wrap{padding:0 2px;gap:5px}.battle-grids{gap:6px}.battle-side{padding:5px 4px}.battle-side-title{font-size:10px}.battle-grid{gap:2px}.battle-tile{font-size:clamp(7px,2.3vw,10px);border-radius:2px}.ship-chip{padding:3px 5px}.battle-brand{font-size:20px}}
 @media(max-height:600px){.battle-wrap{gap:3px}.battle-side{padding:4px}.battle-side-title{margin-bottom:3px}.battle-fleet{min-height:20px}.battle-tile{font-size:10px}.battle-actions .soft-btn{padding:5px 9px}.battle-status{min-height:1em}}
 
+
+/* Bomb Tiles — secret planting, glitter backs, flip reveal and heart lives. */
+.bomb-panel{width:min(100%,620px);max-height:100%;overflow:auto}
+.bomb-big{font-size:52px;filter:drop-shadow(0 0 18px rgba(246,183,53,.35))}
+.bomb-setup-handoff{text-align:center;padding:clamp(14px,3vh,28px)}
+.bomb-setup-handoff h2{font-size:clamp(22px,5vw,32px);margin:12px 0 8px;color:var(--gold)}
+.bomb-setup-handoff p{color:var(--pale);margin:0 0 22px}
+.bomb-status,.bomb-game-status{min-height:30px;text-align:center;color:var(--pale);font-weight:850;font-size:clamp(12px,2vw,15px);margin-bottom:10px}
+.bomb-board{width:min(100%,min(55vh,560px));display:grid;grid-template-columns:repeat(9,minmax(0,1fr));gap:clamp(3px,.8vw,7px);margin:0 auto 14px}
+.bomb-tile{position:relative;aspect-ratio:1;min-width:0;padding:0;border-radius:clamp(4px,1vw,10px);background:linear-gradient(145deg,#2c505b,#1b333c);border:1px solid #42616c;box-shadow:inset 0 1px 0 rgba(255,255,255,.09),0 3px 0 #10242b;display:grid;place-items:center;overflow:hidden;color:white;font-size:clamp(12px,2.6vw,22px);transition:transform .2s,background .25s,box-shadow .25s;isolation:isolate}
+.bomb-tile::before{content:"";position:absolute;inset:-45%;background:conic-gradient(from 0deg,transparent 0 18%,rgba(255,255,255,.12) 20%,transparent 25% 42%,rgba(48,194,189,.28) 45%,transparent 50% 70%,rgba(246,183,53,.2) 74%,transparent 80%);animation:bomb-glitter 4s linear infinite;z-index:-1}
+.bomb-tile::after{content:"✦";position:absolute;right:10%;top:7%;font-size:.48em;color:#f6b735;opacity:.85;text-shadow:0 0 8px #f6b735;animation:bomb-sparkle 1.8s ease-in-out infinite alternate}
+.bomb-tile:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 0 0 2px rgba(48,194,189,.4),0 5px 0 #10242b}
+.bomb-tile.planted{background:#4b3d25;border-color:var(--gold);box-shadow:0 0 12px rgba(246,183,53,.25),0 3px 0 #10242b}
+.bomb-tile.planted::after{content:"✹";color:var(--gold)}
+.bomb-tile.safe{background:linear-gradient(145deg,#39d7a0,#1e9f79);border-color:#75f3c8;color:#102c25;box-shadow:0 0 16px rgba(57,215,160,.42),0 3px 0 #12684f;animation:bomb-flip .48s cubic-bezier(.2,.8,.2,1)}
+.bomb-tile.danger{background:linear-gradient(145deg,#ff6d77,#c72e47);border-color:#ff9aa2;color:white;box-shadow:0 0 18px rgba(255,77,99,.5),0 3px 0 #7c1d30;animation:bomb-flip .48s cubic-bezier(.2,.8,.2,1)}
+.bomb-tile.safe::before,.bomb-tile.danger::before{animation:none;opacity:.22}
+.bomb-tile.safe::after,.bomb-tile.danger::after{display:none}
+.bomb-tile:disabled{cursor:default}
+.bomb-actions{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.bomb-counter{color:var(--gold);font-weight:900;font-size:13px}
+.bomb-primary{background:var(--teal);color:var(--ink);font-weight:900;box-shadow:0 4px 0 #168e8b}
+.bomb-primary:disabled{opacity:.45;cursor:not-allowed}
+.bomb-hearts-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.bomb-player-card{border-radius:12px;background:#203943;border:1px solid #35535d;padding:9px 12px;display:flex;align-items:center;justify-content:space-between;gap:5px;min-width:0}
+.bomb-player-card span{font-size:clamp(10px,1.7vh,13px);font-weight:900;color:var(--pale)}
+.bomb-player-card strong{font-size:clamp(14px,2.5vh,20px);white-space:nowrap;letter-spacing:-.04em}
+.bomb-player-card.active{border-color:var(--gold);box-shadow:0 0 0 2px rgba(246,183,53,.13)}
+.bomb-title-mark{font-size:clamp(20px,4vw,34px);line-height:.98}
+.bomb-game{width:min(100%,650px);gap:0}
+.bomb-topbar{margin-bottom:clamp(7px,1.2vh,12px)}
+.bomb-play-board{width:min(100%,min(51vh,500px));gap:clamp(3px,.7vw,6px);margin-bottom:clamp(8px,1.4vh,14px)}
+.bomb-play-board .bomb-tile{font-size:clamp(12px,2.8vh,24px);border-radius:clamp(3px,.7vw,8px)}
+.bomb-game .result{margin:3px 0 0;min-height:1.2em}
+.bomb-game .bottom-actions{margin-top:clamp(6px,1vh,10px)}
+@keyframes bomb-glitter{to{transform:rotate(360deg)}}
+@keyframes bomb-sparkle{from{transform:scale(.65) rotate(0);opacity:.35}to{transform:scale(1.2) rotate(90deg);opacity:1}}
+@keyframes bomb-flip{0%{transform:rotateY(0) scale(.92)}45%{transform:rotateY(90deg) scale(.94)}100%{transform:rotateY(0) scale(1)}}
+@media(max-width:480px){.bomb-panel{padding:12px}.bomb-board{width:min(100%,58vh,450px);gap:3px}.bomb-tile{border-radius:4px}.bomb-actions{justify-content:center}.bomb-play-board{width:min(100%,47vh,420px);gap:3px}.bomb-player-card{padding:7px 8px}.bomb-player-card strong{font-size:clamp(12px,3.5vw,17px)}.bomb-game{padding:0 10px}}
+@media(max-height:650px){.bomb-board{width:min(100%,48vh,360px);gap:3px}.bomb-panel .menu-panel{padding:12px}.bomb-play-board{width:min(100%,39vh,300px);gap:3px}.bomb-game-status{margin-bottom:5px}.bomb-hearts-row{margin-bottom:5px}.bomb-game .bottom-actions{margin-top:4px}}
 </style>
 </head>
 <body>
@@ -214,6 +255,12 @@ html,body{width:100%;height:100%;min-height:0;overflow:hidden}
     <span class="arrow" aria-hidden="true">›</span>
    </button>
    <div class="menu-stats" id="stats-battle"><strong>POINTS TABLE</strong><span id="stats-battle-label">You vs AI</span><span id="stats-battle-score">You 0 wins · AI 0 wins</span></div>
+   <button class="game-option" id="open-bomb-tiles">
+    <span class="mini" aria-hidden="true">💣</span>
+    <span><strong>Bomb Tiles</strong><small>Plant bombs · Flip tiles · Survive with 3 hearts</small></span>
+    <span class="arrow" aria-hidden="true">›</span>
+   </button>
+   <div class="menu-stats" id="stats-bomb"><strong>POINTS TABLE</strong><span id="stats-bomb-label">WINS</span><span id="stats-bomb-score">Player 1 0 wins · Player 2 0 wins</span></div>
    <button class="game-option" id="open-memory">
     <span class="mini" aria-hidden="true">🧠</span>
     <span><strong>Memory Match</strong><small>Flip emoji cards · Find every pair</small></span>
@@ -332,6 +379,43 @@ html,body{width:100%;height:100%;min-height:0;overflow:hidden}
   <div class="bottom-actions"><button class="soft-btn" id="menu-btn">← Game menu</button><button class="soft-btn" id="new-round">New round</button></div>
  </div>
 </section>
+<section class="screen" id="bomb-setup-screen" aria-label="Bomb placement">
+ <div class="menu-wrap bomb-panel">
+  <h1 class="logo"><span>BOMB</span> <span>TILES</span></h1>
+  <p class="sub" id="bomb-setup-sub">Player 1: secretly plant 3 bombs.</p>
+  <div class="menu-panel">
+   <div class="bomb-setup-handoff hidden" id="bomb-handoff">
+    <div class="bomb-big" aria-hidden="true">💣</div>
+    <h2 id="bomb-handoff-title">Player 1, get ready</h2>
+    <p id="bomb-handoff-copy">Choose 3 secret tiles. Keep the screen private.</p>
+    <button class="soft-btn bomb-primary" id="bomb-handoff-button">Start planting →</button>
+   </div>
+   <div id="bomb-plant-area">
+    <div class="bomb-status" id="bomb-plant-status">Select 3 tiles to hide your bombs.</div>
+    <div class="bomb-board" id="bomb-plant-board" aria-label="Bomb placement board"></div>
+    <div class="bomb-actions"><span class="bomb-counter" id="bomb-plant-count">Bombs planted: 0 / 3</span><button class="soft-btn bomb-primary" id="bomb-plant-done" disabled>Lock bombs</button></div>
+   </div>
+   <div class="bottom-actions"><button class="soft-btn" id="bomb-setup-menu">← Game menu</button></div>
+  </div>
+ </div>
+</section>
+<section class="screen game-screen" id="bomb-game-screen" aria-label="Bomb Tiles game">
+ <div class="game bomb-game">
+  <header class="topbar bomb-topbar">
+   <div class="mark bomb-title-mark"><span style="color:var(--teal)">BOMB</span><br><span style="color:var(--gold)">TILES</span></div>
+   <div class="turn" id="bomb-turn"><span class="turn-mark">💣</span><span>PLAYER 1</span></div>
+   <button class="restart" id="bomb-restart" aria-label="Restart game" title="Restart game">⟳</button>
+  </header>
+  <div class="bomb-hearts-row">
+   <div class="bomb-player-card active" id="bomb-player1-card"><span>PLAYER 1</span><strong id="bomb-player1-hearts">❤️❤️❤️</strong></div>
+   <div class="bomb-player-card" id="bomb-player2-card"><span>PLAYER 2</span><strong id="bomb-player2-hearts">❤️❤️❤️</strong></div>
+  </div>
+  <div class="bomb-game-status" id="bomb-game-status" aria-live="polite">Player 1, choose a tile.</div>
+  <div class="bomb-board bomb-play-board" id="bomb-game-board" role="group" aria-label="9 by 9 bomb tiles"></div>
+  <p class="result" id="bomb-result" aria-live="polite"></p>
+  <div class="bottom-actions"><button class="soft-btn" id="bomb-game-menu">← Game menu</button><button class="soft-btn" id="bomb-new-round">New round</button></div>
+ </div>
+</section>
 </main>
 <div class="celebration-overlay" id="celebration-overlay" aria-live="assertive" aria-atomic="true">
  <div class="celebration-card">
@@ -347,15 +431,15 @@ const menu=document.getElementById('menu'), modeScreen=document.getElementById('
 let cells=Array(9).fill(''), current='X', over=false, mode='cpu', scores={X:0,O:0,T:0}, cpuTimer=null;
 let selectedOpponent='cpu';
 const gameStats=loadGameStats();
-function loadGameStats(){const fresh={xox:{you:0,other:0,ties:0},battle:{you:0,other:0},memory:{you:0,other:0,ties:0},overall:{you:0,other:0}};try{localStorage.removeItem('twoPlayerGamesStats');}catch(e){}return fresh;}
+function loadGameStats(){const fresh={xox:{you:0,other:0,ties:0},battle:{you:0,other:0},memory:{you:0,other:0,ties:0},bomb:{you:0,other:0},overall:{you:0,other:0}};try{localStorage.removeItem('twoPlayerGamesStats');}catch(e){}return fresh;}
 function saveGameStats(){try{localStorage.setItem('twoPlayerGamesStats',JSON.stringify(gameStats));}catch(e){}renderGameStats();}
 function recordWin(game,winner){const mine=winner==='you';gameStats[game][mine?'you':'other']++;gameStats.overall[mine?'you':'other']++;saveGameStats();}
 function recordTie(game){if(gameStats[game].ties!==undefined)gameStats[game].ties++;saveGameStats();}
-function renderGameStats(){const friend=selectedOpponent==='friend',you=friend?'Player 1':'You',other=friend?'Player 2':'AI',cell=(name,value)=>'<div class="points-cell"><span class="points-name">'+name+'</span><span class="points-value">'+value+'</span></div>',grid=(items,two=false)=>'<div class="points-grid'+(two?' two-col':'')+'">'+items.map(x=>cell(x[0],x[1])).join('')+'</div>';document.getElementById('stats-xox-label').textContent='WINS';document.getElementById('stats-xox-score').innerHTML=grid([[you,gameStats.xox.you],[other,gameStats.xox.other],['Ties',gameStats.xox.ties]]);document.getElementById('stats-battle-label').textContent='WINS';document.getElementById('stats-battle-score').innerHTML=grid([[you,gameStats.battle.you],[friend?'Player 2':'Bot',gameStats.battle.other]],true);document.getElementById('stats-memory-label').textContent='WINS';document.getElementById('stats-memory-score').innerHTML=grid([[you,gameStats.memory.you],[other,gameStats.memory.other],['Ties',gameStats.memory.ties]]);document.getElementById('overall-score').innerHTML=grid([[you,gameStats.overall.you],[other,gameStats.overall.other]],true);}
+function renderGameStats(){const friend=selectedOpponent==='friend',you=friend?'Player 1':'You',other=friend?'Player 2':'AI',cell=(name,value)=>'<div class="points-cell"><span class="points-name">'+name+'</span><span class="points-value">'+value+'</span></div>',grid=(items,two=false)=>'<div class="points-grid'+(two?' two-col':'')+'">'+items.map(x=>cell(x[0],x[1])).join('')+'</div>';document.getElementById('stats-xox-label').textContent='WINS';document.getElementById('stats-xox-score').innerHTML=grid([[you,gameStats.xox.you],[other,gameStats.xox.other],['Ties',gameStats.xox.ties]]);document.getElementById('stats-battle-label').textContent='WINS';document.getElementById('stats-battle-score').innerHTML=grid([[you,gameStats.battle.you],[friend?'Player 2':'Bot',gameStats.battle.other]],true);document.getElementById('stats-memory-label').textContent='WINS';document.getElementById('stats-bomb-label').textContent='WINS';document.getElementById('stats-bomb-score').innerHTML=grid([['Player 1',gameStats.bomb.you],['Player 2',gameStats.bomb.other]],true);document.getElementById('stats-memory-score').innerHTML=grid([[you,gameStats.memory.you],[other,gameStats.memory.other],['Ties',gameStats.memory.ties]]);document.getElementById('overall-score').innerHTML=grid([[you,gameStats.overall.you],[other,gameStats.overall.other]],true);}
 let celebrationTimer=null;
 function showCelebration(playerName){const overlay=document.getElementById('celebration-overlay');const name=document.getElementById('celebration-name');clearTimeout(celebrationTimer);name.textContent=playerName+' wins!';overlay.classList.remove('hide');overlay.classList.remove('show');void overlay.offsetWidth;overlay.classList.add('show');celebrationTimer=setTimeout(()=>{overlay.classList.remove('show');overlay.classList.add('hide');setTimeout(()=>overlay.classList.remove('hide'),360);},2800);}
 const wins=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
-function showScreen(screen){document.getElementById('opponent-start').classList.toggle('active',screen==='opponents');menu.classList.toggle('active',screen==='menu');modeScreen.classList.toggle('active',screen==='mode');gameScreen.classList.toggle('active',screen==='game');document.getElementById('memory-mode-screen').classList.toggle('active',screen==='memorymode');document.getElementById('memory-screen').classList.toggle('active',screen==='memorygame');document.getElementById('battle-mode-screen').classList.toggle('active',screen==='battlemode');document.getElementById('battle-setup-screen').classList.toggle('active',screen==='battlesetup');document.getElementById('battle-game-screen').classList.toggle('active',screen==='battlegame');}
+function showScreen(screen){document.getElementById('opponent-start').classList.toggle('active',screen==='opponents');menu.classList.toggle('active',screen==='menu');modeScreen.classList.toggle('active',screen==='mode');gameScreen.classList.toggle('active',screen==='game');document.getElementById('memory-mode-screen').classList.toggle('active',screen==='memorymode');document.getElementById('memory-screen').classList.toggle('active',screen==='memorygame');document.getElementById('battle-mode-screen').classList.toggle('active',screen==='battlemode');document.getElementById('battle-setup-screen').classList.toggle('active',screen==='battlesetup');document.getElementById('battle-game-screen').classList.toggle('active',screen==='battlegame');document.getElementById('bomb-setup-screen').classList.toggle('active',screen==='bombsetup');document.getElementById('bomb-game-screen').classList.toggle('active',screen==='bombgame');}
 function renderBoard(){boardEl.innerHTML='';cells.forEach((v,i)=>{const b=document.createElement('button');b.className='cell'+(v==='O'?' o':'');b.type='button';b.textContent=v==='X'?'×':v==='O'?'○':'';b.setAttribute('aria-label',v?('Cell '+(i+1)+': '+v):('Empty cell '+(i+1)));b.disabled=!!v||over||(mode==='cpu'&&current!=='X');b.addEventListener('click',()=>play(i));boardEl.appendChild(b);});}
 function updateTurn(){turnDisplay.innerHTML=current==='X'?'<span class="turn-mark">×</span><span>TURN</span>':'<span class="turn-mark" style="color:var(--gold)">○</span><span>TURN</span>';turnDisplay.setAttribute('aria-label',current==='X'?'X turn':'O turn');}
 function updateScores(){document.getElementById('x-score').textContent=scores.X;document.getElementById('o-score').textContent=scores.O;document.getElementById('tie-score').textContent=scores.T;document.getElementById('x-label').textContent=mode==='friend'?'X (FRIEND 1)':'X (YOU)';document.getElementById('o-label').textContent=mode==='friend'?'O (FRIEND 2)':'O (CPU)';}
@@ -437,6 +521,24 @@ document.getElementById('memory-new-round').addEventListener('click',setupMemory
 document.getElementById('memory-menu-btn').addEventListener('click',()=>{clearTimeout(memoryCpuTimer);memoryCpuTimer=null;showScreen('menu');});
 document.getElementById('memory-difficulty').addEventListener('change',()=>{memoryKnown=new Map();memorySeen=new Set();});
 
+
+/* Bomb Tiles: both players secretly place three bombs on the same 9×9 grid. */
+const bombSize=81,bombNeed=3;
+let bombModePhase='plant',bombPlanted=[new Set(),new Set()],bombRevealed=new Map(),bombCurrent=0,bombHearts=[3,3],bombGameOver=false,bombPlantReady=false,bombRecentTimer=null;
+function bombStart(){clearTimeout(bombRecentTimer);bombPlanted=[new Set(),new Set()];bombRevealed=new Map();bombCurrent=0;bombHearts=[3,3];bombGameOver=false;bombPlantReady=false;bombModePhase='plant';bombShowHandoff(0);}
+function bombShowHandoff(player){bombCurrent=player;document.getElementById('bomb-setup-sub').textContent='PLAYER '+(player+1)+' · SECRET BOMB PLACEMENT';document.getElementById('bomb-handoff-title').textContent='Player '+(player+1)+', your turn to plant';document.getElementById('bomb-handoff-copy').textContent=player===0?'Choose 3 tiles for your bombs. Player 2 will not see your choices.':'Player 1’s bombs are hidden. Choose 3 tiles of your own.';document.getElementById('bomb-handoff').classList.remove('hidden');document.getElementById('bomb-plant-area').classList.add('hidden');document.getElementById('bomb-handoff-button').textContent='Start planting →';showScreen('bombsetup');}
+function bombRenderPlant(){const board=document.getElementById('bomb-plant-board');board.innerHTML='';const own=bombPlanted[bombCurrent];for(let i=0;i<bombSize;i++){const b=document.createElement('button');b.type='button';b.className='bomb-tile'+(own.has(i)?' planted':'');b.setAttribute('aria-label','Row '+(Math.floor(i/9)+1)+', column '+(i%9+1)+(own.has(i)?', selected secret bomb':''));b.textContent=own.has(i)?'💣':'✦';b.disabled=own.size>=bombNeed&&!own.has(i);b.addEventListener('click',()=>{if(own.has(i))own.delete(i);else if(own.size<bombNeed)own.add(i);bombRenderPlant();});board.appendChild(b);}document.getElementById('bomb-plant-count').textContent='Bombs planted: '+own.size+' / '+bombNeed;document.getElementById('bomb-plant-done').disabled=own.size!==bombNeed;document.getElementById('bomb-plant-status').textContent=own.size===bombNeed?'All 3 bombs selected. Lock them when ready.':'Select '+(bombNeed-own.size)+' more bomb'+(bombNeed-own.size===1?'':'s')+'.';}
+function bombBeginPlant(){document.getElementById('bomb-handoff').classList.add('hidden');document.getElementById('bomb-plant-area').classList.remove('hidden');bombRenderPlant();}
+function bombLockPlant(){if(bombPlanted[bombCurrent].size!==bombNeed)return;if(bombCurrent===0){bombShowHandoff(1);return;}bombModePhase='play';bombCurrent=0;bombHearts=[3,3];bombRevealed=new Map();bombGameOver=false;showScreen('bombgame');bombRenderGame();document.getElementById('bomb-game-status').textContent='Player 1 starts. Choose any tile — even your own bomb can hurt you!';}
+function bombRenderGame(){const board=document.getElementById('bomb-game-board');board.innerHTML='';for(let i=0;i<bombSize;i++){const b=document.createElement('button');b.type='button';const reveal=bombRevealed.get(i);b.className='bomb-tile'+(reveal?(reveal.danger?' danger':' safe'):'');b.textContent=reveal?(reveal.danger?'💥':'✓'):'✦';b.setAttribute('aria-label',reveal?(reveal.danger?'Danger tile':'Safe tile'):'Hidden tile '+(i+1));b.disabled=!!reveal||bombGameOver;b.addEventListener('click',()=>bombPick(i));board.appendChild(b);}document.getElementById('bomb-turn').innerHTML='<span class="turn-mark">💣</span><span>PLAYER '+(bombCurrent+1)+'</span>';document.getElementById('bomb-player1-hearts').textContent='❤️'.repeat(bombHearts[0])+'🖤'.repeat(3-bombHearts[0]);document.getElementById('bomb-player2-hearts').textContent='❤️'.repeat(bombHearts[1])+'🖤'.repeat(3-bombHearts[1]);document.getElementById('bomb-player1-card').classList.toggle('active',bombCurrent===0&&!bombGameOver);document.getElementById('bomb-player2-card').classList.toggle('active',bombCurrent===1&&!bombGameOver);}
+function bombPick(i){if(bombGameOver||bombRevealed.has(i))return;const dangerous=bombPlanted[0].has(i)||bombPlanted[1].has(i);bombRevealed.set(i,{danger:dangerous});if(dangerous){bombHearts[bombCurrent]=Math.max(0,bombHearts[bombCurrent]-1);document.getElementById('bomb-game-status').textContent='💥 BOOM! Player '+(bombCurrent+1)+' hit a bomb and lost a heart.';}else document.getElementById('bomb-game-status').textContent='✨ Safe! Player '+(bombCurrent+1)+' found a safe tile.';bombRenderGame();if(bombHearts[bombCurrent]===0){bombGameOver=true;const winner=1-bombCurrent;document.getElementById('bomb-game-status').textContent='Player '+(bombCurrent+1)+' lost all 3 hearts. Player '+(winner+1)+' wins!';document.getElementById('bomb-result').textContent='Player '+(winner+1)+' wins Bomb Tiles!';recordWin('bomb',winner===0?'you':'other');bombRenderGame();showCelebration('Player '+(winner+1));return;}bombCurrent=1-bombCurrent;bombRenderGame();document.getElementById('bomb-game-status').textContent='Pass the device to Player '+(bombCurrent+1)+'. Choose a hidden tile.';}
+document.getElementById('open-bomb-tiles').addEventListener('click',bombStart);
+document.getElementById('bomb-handoff-button').addEventListener('click',bombBeginPlant);
+document.getElementById('bomb-plant-done').addEventListener('click',bombLockPlant);
+document.getElementById('bomb-setup-menu').addEventListener('click',()=>showScreen('menu'));
+document.getElementById('bomb-game-menu').addEventListener('click',()=>showScreen('menu'));
+document.getElementById('bomb-restart').addEventListener('click',bombStart);
+document.getElementById('bomb-new-round').addEventListener('click',bombStart);
 updateTurn();updateScores();renderBoard();
 
 /* Battleship: two private placement phases, then turn-based fleet combat. */
