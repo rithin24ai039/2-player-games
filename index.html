@@ -418,7 +418,7 @@ document.getElementById('memory-cpu').addEventListener('click',()=>{memoryMode='
 document.getElementById('memory-back-menu').addEventListener('click',()=>showMemoryScreen('menu'));
 document.getElementById('memory-restart').addEventListener('click',setupMemory);
 document.getElementById('memory-new-round').addEventListener('click',setupMemory);
-document.getElementById('memory-menu-btn').addEventListener('click',()=>{clearTimeout(memoryCpuTimer);memoryCpuTimer=null;showMemoryScreen('memorymode');});
+document.getElementById('memory-menu-btn').addEventListener('click',()=>{clearTimeout(memoryCpuTimer);memoryCpuTimer=null;showScreen('menu');});
 document.getElementById('memory-difficulty').addEventListener('change',()=>{memoryKnown=new Map();memorySeen=new Set();});
 
 updateTurn();updateScores();renderBoard();
